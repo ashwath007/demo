@@ -16,6 +16,7 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  TextInput
 } from 'react-native';
 
 import Sound from 'react-native-sound';
@@ -44,8 +45,12 @@ import Six from './assets/dice6.png'
 const App =  () => {
 
   const [roll, setroll] = useState(One);
-
-  
+  const [name, setname] = useState(0);
+  const [cur, setcur] = useState(0);
+  const [res, setres] = useState(0);
+  const calculate = () => {
+    setres(parseInt(name*cur));
+  }
   const soundList = [
 
     require('./sound/one.wav'),
@@ -60,7 +65,12 @@ const App =  () => {
     require('./sound/ten.wav')
     
   ];
-
+  const onNameHandler = (t) => {
+    setname(t);
+  }
+  const onCurHandler = (t) => {
+    setcur(t);
+  }
   const playSound = (sound) => {
     console.log(sound);
     var whoosh = new Sound(sound, Sound.MAIN_BUNDLE, (error) => {
@@ -137,7 +147,10 @@ const App =  () => {
 
             {soundList.map((sound,i)=>{
               return(
-                <TouchableOpacity key={sound} style={styles.btnbox} onPress={()=>{playSound(sound)}}>
+                <TouchableOpacity key={sound} style={styles.btnbox} onPress={()=>{playSound(sound)}} 
+                keyboardType='numeric' keyboardType='numeric'
+                
+                >
                   <Text>{i+1}</Text>
                 </TouchableOpacity>
               )
@@ -146,7 +159,28 @@ const App =  () => {
           </View>
           </View>
           <View style={styles.currencyBg}>
+            <View>
+              <Text style={{color:'white'}}>
+                {res}
+              </Text>
+            </View>
+            <TextInput
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1, color:'white' }}
+            onChange={t => onNameHandler(t)}
+            />
 
+<TextInput
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1, color:'white' }}
+            onChange={t => onCurHandler(t)}
+            />
+        <TouchableOpacity style={styles.calbtn} onPress={()=>{calculate()}}>
+          <Text>
+            Calculate
+          </Text>
+        </TouchableOpacity>
+
+
+              
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -198,6 +232,11 @@ btnbox:{
 currencyBg:{
 
   backgroundColor:'#2827CC'
+},
+calbtn:{
+  backgroundColor:'#3DBE29',
+  paddingVertical:12,
+  alignSelf:'center'
 }
 })
 export default App;
